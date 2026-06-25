@@ -1,0 +1,40 @@
+{
+  "name": "campaignova",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "check:env": "node scripts/check-env.mjs",
+    "verify": "npm run typecheck && npm run build && npm audit --omit=dev",
+    "smoke:prod": "node scripts/smoke-production.mjs",
+    "videos:import": "node scripts/import-video-library.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.0",
+    "@supabase/supabase-js": "2.108.2",
+    "lucide-react": "1.21.0",
+    "next": "16.2.9",
+    "openai": "6.44.0",
+    "pdfkit": "^0.19.1",
+    "pptxgenjs": "^4.0.1",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.1",
+    "@types/node": "^24.0.0",
+    "@types/pdfkit": "^0.17.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "supabase": "^2.107.0",
+    "tailwindcss": "4.3.1",
+    "typescript": "6.0.3"
+  },
+  "overrides": {
+    "postcss": "8.5.15"
+  }
+}

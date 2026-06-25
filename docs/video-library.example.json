@@ -1,0 +1,15 @@
+{
+  "assets": [
+    {
+      "title": "Design Decision Reel 01",
+      "slug": "design-decision-reel-01",
+      "description": "Clean vertical interior-design video for educational campaign use.",
+      "industryTags": ["interior-design", "home-services"],
+      "platformTags": ["instagram", "tiktok", "youtube-shorts"],
+      "durationSeconds": 18,
+      "sourceFile": "../private-videos/design-decision-01.mp4",
+      "previewFile": "../private-videos/design-decision-01-preview.mp4",
+      "licenseNotes": "Commercial rights verified by Campaignova."
+    }
+  ]
+}
