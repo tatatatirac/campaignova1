@@ -217,40 +217,51 @@ export async function generateLandingPage(
 
   const model = process.env.OPENAI_CONTENT_MODEL || "gpt-5.4-mini";
   const client = new OpenAI({ apiKey });
-  const response = await client.responses.parse({
-    model,
-    instructions: LANDING_PAGE_INSTRUCTIONS,
-    input: JSON.stringify({
-      company: { ...input.company, language: "English" },
-      approvedStrategy: input.strategy,
-      approvedEmailSequence: input.emails.emails.map((email) => ({
-        sequenceNumber: email.sequenceNumber,
-        role: email.role,
-        subjectLine: email.subjectLine,
-        callToAction: email.callToAction
-      })),
-      outputLanguage: "English",
-      version: input.version
-    }),
-    reasoning: { effort: "medium" },
-    text: {
-      format: zodTextFormat(landingPageSchema, "landing_page"),
-      verbosity: "low"
-    },
-    store: false,
-    prompt_cache_key: "campaignova-landing-page-english-v1"
-  });
 
-  if (!response.output_parsed) {
-    throw new Error("Landing page generation returned no structured output.");
+  try {
+    const response = await client.responses.parse({
+      model,
+      instructions: LANDING_PAGE_INSTRUCTIONS,
+      input: JSON.stringify({
+        company: { ...input.company, language: "English" },
+        approvedStrategy: input.strategy,
+        approvedEmailSequence: input.emails.emails.map((email) => ({
+          sequenceNumber: email.sequenceNumber,
+          role: email.role,
+          subjectLine: email.subjectLine,
+          callToAction: email.callToAction
+        })),
+        outputLanguage: "English",
+        version: input.version
+      }),
+      reasoning: { effort: "medium" },
+      text: {
+        format: zodTextFormat(landingPageSchema, "landing_page"),
+        verbosity: "low"
+      },
+      store: false,
+      prompt_cache_key: "campaignova-landing-page-english-v1"
+    });
+
+    if (!response.output_parsed) {
+      throw new Error("Landing page generation returned no structured output.");
+    }
+
+    return {
+      page: landingPageSchema.parse({
+        ...response.output_parsed,
+        version: input.version
+      }),
+      model,
+      mocked: false
+    };
+  } catch (error) {
+    console.error("Landing page AI generation failed; using fallback.", error);
+
+    return {
+      page: createMockLandingPage(input),
+      model: `${model}-fallback-v1`,
+      mocked: true
+    };
   }
-
-  return {
-    page: landingPageSchema.parse({
-      ...response.output_parsed,
-      version: input.version
-    }),
-    model,
-    mocked: false
-  };
 }

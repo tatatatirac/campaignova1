@@ -22,6 +22,22 @@ const editRequestSchema = z.object({
   page: landingPageSchema
 });
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "string") {
+    return error;
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return "Unknown landing page generation error";
+  }
+}
+
 async function loadGenerationContext(planId: string, ownerId: string) {
   const supabase = await createClient();
   const { data: plan, error: planError } = await supabase
@@ -187,10 +203,7 @@ export async function POST(request: Request) {
       { headers: aiUsageResponseHeaders(usage.reservation) }
     );
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unknown landing page generation error";
+    const message = getErrorMessage(error);
 
     await admin
       .from("marketing_plans")
