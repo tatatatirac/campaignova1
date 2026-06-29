@@ -5,7 +5,6 @@ import {
   Bell,
   CalendarDays,
   CheckCircle2,
-  ChevronRight,
   Clock3,
   Download,
   FileText,
@@ -76,12 +75,12 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  ["Overview", LayoutDashboard, true],
-  ["Marketing plans", FileText, false],
-  ["Release calendar", CalendarDays, false],
-  ["Video library", Library, false],
-  ["Business memory", Users, false],
-  ["Analytics", BarChart3, false]
+  ["Overview", LayoutDashboard, true, ""],
+  ["Marketing plans", FileText, false, "Soon"],
+  ["Release calendar", CalendarDays, false, "Soon"],
+  ["Video library", Library, false, "Soon"],
+  ["Business memory", Users, false, "Soon"],
+  ["Analytics", BarChart3, false, "Soon"]
 ] as const;
 
 export default async function DashboardPage() {
@@ -292,17 +291,25 @@ export default async function DashboardPage() {
           <BrandMark />
         </div>
         <nav className="mt-10 grid gap-1">
-          {navItems.map(([label, Icon, active]) => (
+          {navItems.map(([label, Icon, active, badge]) => (
             <button
               key={label}
+              type="button"
+              disabled={!active}
+              title={active ? label : `${label} is coming soon`}
               className={`flex h-11 items-center gap-3 rounded-xl px-3 text-left text-[13px] font-bold ${
                 active
                   ? "bg-[#121412] text-white"
-                  : "text-[#656a64] hover:bg-black/5"
+                  : "cursor-not-allowed text-[#656a64] opacity-75"
               }`}
             >
               <Icon size={17} className={active ? "text-[#d9ff43]" : ""} />
-              {label}
+              <span className="min-w-0 flex-1 truncate">{label}</span>
+              {badge && (
+                <span className="rounded-full bg-black/5 px-2 py-1 text-[8px] font-black uppercase tracking-wide text-[#7a7f78]">
+                  {badge}
+                </span>
+              )}
             </button>
           ))}
         </nav>
@@ -385,7 +392,11 @@ export default async function DashboardPage() {
             <div className="hidden rounded-full border border-black/10 bg-white px-3 py-2 text-[10px] font-black text-[#626760] sm:block">
               {aiUsage.requestsRemaining} AI actions left
             </div>
-            <button className="grid size-10 place-items-center rounded-full border border-black/10 bg-white">
+            <button
+              type="button"
+              title="Notifications are coming soon"
+              className="grid size-10 place-items-center rounded-full border border-black/10 bg-white"
+            >
               <Bell size={17} />
             </button>
             <div className="grid size-10 place-items-center rounded-full bg-[#d9ff43] text-xs font-black">
@@ -467,7 +478,12 @@ export default async function DashboardPage() {
                       : "Approve the strategy before content production begins."}
                   </p>
                 </div>
-                <button className="grid size-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5">
+                <button
+                  type="button"
+                  disabled
+                  title="Campaign actions are coming soon"
+                  className="grid size-10 shrink-0 cursor-not-allowed place-items-center rounded-full border border-white/10 bg-white/5 opacity-60"
+                >
                   <MoreHorizontal size={17} />
                 </button>
               </div>
@@ -502,9 +518,18 @@ export default async function DashboardPage() {
                   <div className="mt-5 rounded-xl border border-white/8 p-3 text-xs text-white/45">
                     CTA: {primaryItem?.callToAction ?? "Approve and build the calendar"}
                   </div>
-                  <button className="mt-auto flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#d9ff43] px-4 text-xs font-black text-[#121412]">
+                  <button
+                    type="button"
+                    disabled
+                    title={
+                      primaryItem
+                        ? "Content detail pages are coming soon"
+                        : "Use the strategy panel above to continue"
+                    }
+                    className="mt-auto flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-full bg-[#d9ff43] px-4 text-xs font-black text-[#121412] opacity-75"
+                  >
                     <CalendarDays size={15} />
-                    {primaryItem ? "Open content details" : "Continue campaign setup"}
+                    {primaryItem ? "Details coming soon" : "Use strategy panel above"}
                   </button>
                 </div>
               </div>
@@ -566,10 +591,9 @@ export default async function DashboardPage() {
                     </span>
                   ))}
                 </div>
-                <button className="mt-5 flex items-center gap-1 text-xs font-black text-[#695cff]">
-                  Review memory
-                  <ChevronRight size={14} />
-                </button>
+                <p className="mt-5 text-xs font-black text-[#695cff]">
+                  Memory editor coming soon
+                </p>
               </article>
             </div>
           </div>
@@ -583,10 +607,10 @@ export default async function DashboardPage() {
                   </p>
                   <h3 className="mt-1 text-xl font-black">{calendarRange}</h3>
                 </div>
-                <button className="button-secondary !min-h-9 !px-3 !text-[11px]">
-                  Full calendar
+                <span className="button-secondary !min-h-9 !cursor-default !px-3 !text-[11px]">
+                  Full calendar soon
                   <ArrowUpRight size={13} />
-                </button>
+                </span>
               </div>
               <div className="mt-6 grid grid-cols-7 gap-1.5 sm:gap-2">
                 {calendarWeek.map((item) => (
@@ -721,7 +745,7 @@ export default async function DashboardPage() {
                 ].map(([title, detail, Icon, progress]) => {
                   const OutputIcon = Icon as typeof Target;
                   return (
-                    <button
+                    <div
                       key={title as string}
                       className="flex items-center gap-3 rounded-2xl border border-black/8 bg-white p-3 text-left"
                     >
@@ -737,8 +761,7 @@ export default async function DashboardPage() {
                       <span className="text-[10px] font-black text-[#777c75]">
                         {progress as string}
                       </span>
-                      <ChevronRight size={14} className="text-[#92968f]" />
-                    </button>
+                    </div>
                   );
                 })}
               </div>
